@@ -1,0 +1,546 @@
+
+<!DOCTYPE html>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=Righteous&family=Pacifico&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.page {
+  background: #f0e8d8;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+  font-family: 'Righteous', sans-serif;
+}
+
+.card-main {
+  background: #f0e8d8;
+  width: 100%;
+  max-width: 540px;
+  position: relative;
+  padding: 0 0 2rem;
+  z-index: 2;
+}
+
+.header-section {
+  background: #c8380a;
+  padding: 1.2rem 1.5rem 0.8rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.made-in {
+  font-family: 'Pacifico', cursive;
+  color: #f5c842;
+  font-size: 15px;
+  letter-spacing: 1px;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.sixty-big {
+  font-family: 'Pacifico', cursive;
+  font-size: 88px;
+  color: #fff;
+  line-height: 0.9;
+  text-align: center;
+  -webkit-text-stroke: 3px #a02800;
+  text-shadow: 5px 5px 0 #a02800;
+  display: block;
+}
+
+.anos-tag {
+  font-family: 'Pacifico', cursive;
+  color: #f5c842;
+  font-size: 30px;
+  text-align: center;
+  display: block;
+  margin-top: -6px;
+  -webkit-text-stroke: 1px #a02800;
+  text-shadow: 3px 3px 0 #a02800;
+}
+
+.flower-stripe {
+  background: #e8a020;
+  padding: 7px 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.flower-text {
+  font-family: 'Righteous', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #7a1800;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.body-section {
+  padding: 1.5rem 1.8rem;
+  position: relative;
+}
+
+.festejado-bubble {
+  background: #4a8fa0;
+  border-radius: 60px;
+  padding: 10px 28px;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+.festejado-small {
+  font-family: 'Righteous', sans-serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: #d4f0f8;
+  text-align: center;
+}
+
+.name-big {
+  font-family: 'Pacifico', cursive;
+  font-size: 52px;
+  color: #c8380a;
+  text-align: center;
+  line-height: 1;
+  margin: 8px 0 4px;
+  text-shadow: 3px 3px 0 rgba(200,56,10,0.2);
+}
+
+.groove-line {
+  text-align: center;
+  font-family: 'Righteous', sans-serif;
+  color: #7a3b00;
+  font-size: 12px;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+
+.info-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.info-pill {
+  border-radius: 50px;
+  padding: 8px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.info-pill.orange { background: #c8380a; }
+.info-pill.teal { background: #4a8fa0; }
+.info-pill.brown { background: #6b3a1f; }
+
+.pill-label {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.7);
+  font-family: 'Righteous', sans-serif;
+  text-transform: uppercase;
+}
+
+.pill-value {
+  font-family: 'Righteous', sans-serif;
+  font-size: 15px;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.wavy-divider {
+  width: 100%;
+  height: 30px;
+  margin: 4px 0;
+}
+
+.tematica-section {
+  background: #2d1a4a;
+  border-radius: 16px;
+  padding: 14px 20px;
+  margin-bottom: 16px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.tema-label {
+  font-family: 'Righteous', sans-serif;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: #b8a0e0;
+  margin-bottom: 2px;
+}
+
+.tema-value {
+  font-family: 'Pacifico', cursive;
+  font-size: 28px;
+  color: #f5c842;
+  text-shadow: 2px 2px 0 #8b4500;
+}
+
+.tema-sub {
+  font-family: 'Righteous', sans-serif;
+  font-size: 11px;
+  color: #d4c0f0;
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
+.combi-section {
+  position: relative;
+  margin: 0 0 1rem;
+  height: 110px;
+  overflow: visible;
+}
+
+.road-strip {
+  position: absolute;
+  bottom: 12px;
+  left: 0; right: 0;
+  height: 18px;
+  background: #c8380a;
+  border-radius: 4px;
+}
+
+.road-dashes {
+  position: absolute;
+  bottom: 19px;
+  left: 0; right: 0;
+  height: 4px;
+  background: repeating-linear-gradient(90deg, #f5c842 0px, #f5c842 20px, transparent 20px, transparent 40px);
+  animation: roadMove 1s linear infinite;
+  background-size: 40px 4px;
+}
+
+@keyframes roadMove {
+  from { background-position: 0 0; }
+  to { background-position: -80px 0; }
+}
+
+.inapam-badge {
+  background: #f0e8d8;
+  border: 3px solid #c8380a;
+  border-radius: 12px;
+  padding: 10px 16px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.inapam-logo {
+  font-family: 'Pacifico', cursive;
+  font-size: 22px;
+  color: #c8380a;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.inapam-desc {
+  font-family: 'Righteous', sans-serif;
+  font-size: 10px;
+  color: #6b3a1f;
+  letter-spacing: 1px;
+  line-height: 1.5;
+}
+
+.inapam-desc strong {
+  color: #c8380a;
+  font-size: 11px;
+  display: block;
+  letter-spacing: 2px;
+}
+
+/* Scrolling ticker */
+.ticker-wrap {
+  background: #2d1a4a;
+  overflow: hidden;
+  padding: 6px 0;
+  margin-bottom: 14px;
+  border-radius: 8px;
+}
+
+.ticker {
+  display: flex;
+  white-space: nowrap;
+  animation: ticker 18s linear infinite;
+  gap: 0;
+}
+
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.ticker-item {
+  font-family: 'Righteous', sans-serif;
+  font-size: 11px;
+  color: #f5c842;
+  letter-spacing: 2px;
+  padding: 0 24px;
+  flex-shrink: 0;
+}
+
+.ticker-dot {
+  color: #e8a020;
+  padding: 0 4px;
+}
+
+.footer-section {
+  background: #4a8fa0;
+  padding: 1rem 1.5rem;
+  text-align: center;
+}
+
+.footer-main {
+  font-family: 'Pacifico', cursive;
+  color: #fff;
+  font-size: 20px;
+  text-shadow: 2px 2px 0 #2d6070;
+  margin-bottom: 4px;
+}
+
+.footer-sub {
+  font-family: 'Righteous', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #d4f0f8;
+}
+
+.daisy-row {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.daisy {
+  font-size: 22px;
+  animation: daisySpin 6s linear infinite;
+  display: inline-block;
+  color: #c8380a;
+}
+
+.daisy:nth-child(even) {
+  animation-direction: reverse;
+  color: #4a8fa0;
+  font-size: 18px;
+}
+
+@keyframes daisySpin {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes wheelSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.wheel {
+  animation: wheelSpin 1.2s linear infinite;
+  transform-origin: center;
+}
+</style>
+
+<div class="page">
+
+  <!-- TOP WAVE BANNER -->
+  <svg width="100%" height="160" viewBox="0 0 680 160" preserveAspectRatio="xMidYMid slice" style="display:block; flex-shrink:0;">
+    <rect width="680" height="160" fill="#f0e8d8"/>
+    <path d="M0,0 Q170,80 340,40 Q510,0 680,60 L680,0 Z" fill="#c8380a"/>
+    <path d="M0,10 Q170,90 340,50 Q510,10 680,70 L680,12 Q510,22 340,62 Q170,102 0,22 Z" fill="#e8a020"/>
+    <path d="M0,22 Q170,102 340,62 Q510,22 680,82 L680,24 Q510,34 340,74 Q170,114 0,34 Z" fill="#4a8fa0"/>
+    <path d="M0,34 Q170,114 340,74 Q510,34 680,94 L680,36 Q510,46 340,86 Q170,126 0,46 Z" fill="#d4960a"/>
+    <path d="M0,46 Q170,126 340,86 Q510,46 680,106 L680,48 Q510,58 340,98 Q170,138 0,58 Z" fill="#6b3a1f"/>
+    <path d="M0,58 Q170,138 340,98 Q510,58 680,118 L680,60 Q510,70 340,110 Q170,150 0,70 Z" fill="#2d1a4a"/>
+    <path d="M0,70 Q170,150 340,110 Q510,70 680,130 L680,160 L0,160 Z" fill="#2d1a4a"/>
+    <!-- Sunburst -->
+    <g transform="translate(580, 20)">
+      <circle cx="0" cy="0" r="38" fill="#f5c842"/>
+      <circle cx="0" cy="0" r="26" fill="#e8a020"/>
+      <g stroke="#f5c842" stroke-width="3" stroke-linecap="round">
+        <line x1="0" y1="-50" x2="0" y2="-42"/>
+        <line x1="35" y1="-35" x2="30" y2="-30"/>
+        <line x1="50" y1="0" x2="42" y2="0"/>
+        <line x1="35" y1="35" x2="30" y2="30"/>
+        <line x1="0" y1="50" x2="0" y2="42"/>
+        <line x1="-35" y1="35" x2="-30" y2="30"/>
+        <line x1="-50" y1="0" x2="-42" y2="0"/>
+        <line x1="-35" y1="-35" x2="-30" y2="-30"/>
+      </g>
+      <circle cx="0" cy="0" r="12" fill="#f0e8d8"/>
+    </g>
+    <text x="50" y="80" font-family="Pacifico, cursive" font-size="44" fill="#f0e8d8">60</text>
+    <text x="44" y="134" font-family="Pacifico, cursive" font-size="52" fill="#f5c842" stroke="#c8380a" stroke-width="2" paint-order="stroke">años ✦ groove</text>
+    <text x="20" y="148" font-size="28" fill="#e8a020">☮</text>
+  </svg>
+
+  <div class="card-main">
+
+    <div class="header-section">
+      <div class="made-in">✦ cumpleaños número ✦</div>
+      <span class="sixty-big">60</span>
+      <span class="anos-tag">años de puro groove</span>
+      <div style="height: 18px;"></div>
+    </div>
+
+    <!-- FLOWER STRIPE con el nuevo texto -->
+    <div class="flower-stripe">
+      <span style="font-size:14px; color:#7a1800; flex-shrink:0;">✿</span>
+      <span class="flower-text">Dándole la bienvenida al INAPAM</span>
+      <span style="font-size:14px; color:#7a1800; flex-shrink:0;">✿</span>
+    </div>
+
+    <div class="body-section">
+
+      <div class="daisy-row">
+        <span class="daisy">✿</span>
+        <span class="daisy">✾</span>
+        <span class="daisy">✿</span>
+        <span class="daisy">✾</span>
+        <span class="daisy">✿</span>
+      </div>
+
+      <div style="text-align:center; margin-bottom: 4px;">
+        <div class="festejado-bubble">
+          <div class="festejado-small">el mero mero</div>
+        </div>
+      </div>
+      <div class="name-big">El Peps</div>
+      <div class="groove-line">✦ seis décadas en el planeta ✦</div>
+
+      <!-- INAPAM badge gracioso -->
+      <div class="inapam-badge">
+        <div class="inapam-logo">🌿<br>INAPAM</div>
+        <div class="inapam-desc">
+          <strong>Credencial honorífica</strong>
+          Descuentos en la farmacia · Asiento preferencial · Derecho a repetir el mismo chiste dos veces · Siesta sin culpa
+        </div>
+      </div>
+
+      <!-- Ticker con bromas de adulto mayor -->
+      <div class="ticker-wrap">
+        <div class="ticker">
+          <span class="ticker-item">☑ Ya puede comer a las 6pm sin vergüenza</span>
+          <span class="ticker-item">✦</span>
+          <span class="ticker-item">☑ Tiene permiso de bajar el volumen a todo</span>
+          <span class="ticker-item">✦</span>
+          <span class="ticker-item">☑ Sus rodillas pronostican el clima</span>
+          <span class="ticker-item">✦</span>
+          <span class="ticker-item">☑ "Ay mis huesos" es válido como saludo</span>
+          <span class="ticker-item">✦</span>
+          <span class="ticker-item">☑ Ya puede comer a las 6pm sin vergüenza</span>
+          <span class="ticker-item">✦</span>
+          <span class="ticker-item">☑ Tiene permiso de bajar el volumen a todo</span>
+          <span class="ticker-item">✦</span>
+          <span class="ticker-item">☑ Sus rodillas pronostican el clima</span>
+          <span class="ticker-item">✦</span>
+          <span class="ticker-item">☑ "Ay mis huesos" es válido como saludo</span>
+          <span class="ticker-item">✦</span>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <div class="info-pill orange">
+          <span class="pill-label">fecha</span>
+          <span class="pill-value">Sáb 13 Junio</span>
+        </div>
+        <div class="info-pill teal">
+          <span class="pill-label">hora</span>
+          <span class="pill-value">2:30 pm</span>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-pill brown">
+          <span class="pill-label">lugar</span>
+          <span class="pill-value">Rey Uapeani #79, Vista Bella</span>
+        </div>
+      </div>
+
+      <svg class="wavy-divider" viewBox="0 0 540 30" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,15 Q45,0 90,15 Q135,30 180,15 Q225,0 270,15 Q315,30 360,15 Q405,0 450,15 Q495,30 540,15" fill="none" stroke="#c8380a" stroke-width="3"/>
+        <path d="M0,20 Q45,5 90,20 Q135,35 180,20 Q225,5 270,20 Q315,35 360,20 Q405,5 450,20 Q495,35 540,20" fill="none" stroke="#e8a020" stroke-width="2"/>
+        <path d="M0,10 Q45,-5 90,10 Q135,25 180,10 Q225,-5 270,10 Q315,25 360,10 Q405,-5 450,10 Q495,25 540,10" fill="none" stroke="#4a8fa0" stroke-width="1.5"/>
+      </svg>
+
+      <div class="tematica-section">
+        <div class="tema-label">✦ temática obligatoria ✦</div>
+        <div class="tema-value">Años 70s</div>
+        <div class="tema-sub">Floreadas · Plataformas · Maxi vestidos · Bigotes épicos</div>
+        <div class="tema-sub" style="margin-top: 6px; color: #f5c842;">Favor de venir ad hoc ✌️</div>
+      </div>
+
+      <!-- Combi -->
+      <div class="combi-section">
+        <div class="road-dashes"></div>
+        <div class="road-strip"></div>
+        <svg viewBox="0 0 540 110" width="100%" style="position:absolute; top:0; left:0;">
+          <g transform="translate(60, 8)">
+            <rect x="0" y="30" width="320" height="65" rx="12" fill="#f0e8d8" stroke="#6b3a1f" stroke-width="2"/>
+            <path d="M300,30 Q330,30 340,60 L340,90 L300,90 Z" fill="#d4c0a0" stroke="#6b3a1f" stroke-width="2"/>
+            <path d="M300,35 Q325,35 333,58 L300,58 Z" fill="#b0d8e8" stroke="#6b3a1f" stroke-width="1.5"/>
+            <rect x="0" y="30" width="300" height="30" rx="8" fill="#c8380a"/>
+            <rect x="0" y="55" width="300" height="4" fill="#f0e8d8"/>
+            <text x="200" y="85" font-size="20" fill="#e8a020" text-anchor="middle">✿</text>
+            <text x="240" y="85" font-size="16" fill="#4a8fa0" text-anchor="middle">✿</text>
+            <text x="265" y="85" font-size="14" fill="#c8380a" text-anchor="middle">✾</text>
+            <circle cx="331" cy="64" r="14" fill="#f0e8d8" stroke="#6b3a1f" stroke-width="1.5"/>
+            <text x="331" y="70" font-size="14" font-weight="bold" fill="#6b3a1f" text-anchor="middle" font-family="sans-serif">VW</text>
+            <rect x="12" y="34" width="70" height="20" rx="4" fill="#b0d8e8" stroke="#6b3a1f" stroke-width="1"/>
+            <rect x="90" y="34" width="70" height="20" rx="4" fill="#b0d8e8" stroke="#6b3a1f" stroke-width="1"/>
+            <rect x="168" y="34" width="70" height="20" rx="4" fill="#b0d8e8" stroke="#6b3a1f" stroke-width="1"/>
+            <rect x="246" y="34" width="48" height="20" rx="4" fill="#b0d8e8" stroke="#6b3a1f" stroke-width="1"/>
+            <rect x="330" y="82" width="18" height="6" rx="3" fill="#888" stroke="#666" stroke-width="1"/>
+            <circle cx="336" cy="70" r="5" fill="#ffffd0" stroke="#aaa" stroke-width="1"/>
+            <g class="wheel" style="transform-box: fill-box;">
+              <circle cx="60" cy="95" r="18" fill="#2d1a4a" stroke="#6b3a1f" stroke-width="2"/>
+              <circle cx="60" cy="95" r="10" fill="#888"/>
+              <circle cx="60" cy="95" r="5" fill="#f0e8d8"/>
+              <line x1="60" y1="77" x2="60" y2="113" stroke="#666" stroke-width="1.5"/>
+              <line x1="42" y1="95" x2="78" y2="95" stroke="#666" stroke-width="1.5"/>
+            </g>
+            <g class="wheel" style="transform-box: fill-box;">
+              <circle cx="260" cy="95" r="18" fill="#2d1a4a" stroke="#6b3a1f" stroke-width="2"/>
+              <circle cx="260" cy="95" r="10" fill="#888"/>
+              <circle cx="260" cy="95" r="5" fill="#f0e8d8"/>
+              <line x1="260" y1="77" x2="260" y2="113" stroke="#666" stroke-width="1.5"/>
+              <line x1="242" y1="95" x2="278" y2="95" stroke="#666" stroke-width="1.5"/>
+            </g>
+          </g>
+          <circle cx="58" cy="50" r="8" fill="#e0d8c8" opacity="0.7"/>
+          <circle cx="44" cy="44" r="6" fill="#e0d8c8" opacity="0.5"/>
+          <circle cx="32" cy="40" r="4" fill="#e0d8c8" opacity="0.3"/>
+        </svg>
+      </div>
+
+    </div>
+
+    <div class="footer-section">
+      <div class="footer-main">¡Arma tu look más groovy!</div>
+      <div class="footer-sub">Confirma tu asistencia con quien te compartió esto ✌</div>
+    </div>
+
+    <svg width="100%" height="20" viewBox="0 0 540 20" style="display:block;">
+      <rect x="0" y="0" width="108" height="20" fill="#c8380a"/>
+      <rect x="108" y="0" width="108" height="20" fill="#e8a020"/>
+      <rect x="216" y="0" width="108" height="20" fill="#4a8fa0"/>
+      <rect x="324" y="0" width="108" height="20" fill="#d4960a"/>
+      <rect x="432" y="0" width="108" height="20" fill="#2d1a4a"/>
+    </svg>
+
+  </div>
+</div>
