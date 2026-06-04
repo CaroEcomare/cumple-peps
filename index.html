@@ -673,65 +673,77 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/midi-player-js@2.0.16/browser/midiplayer.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/soundfont-player@0.12.0/dist/soundfont-player.min.js"></script>
+<!-- Reveal function en bloque aislado: siempre disponible aunque el MIDI falle -->
 <script>
-  var AudioContext = window.AudioContext || window.webkitAudioContext;
-  var ac = new AudioContext();
-  var instruments = {};
-  var midiReady = false;
-  var playRequested = false;
-
-  var player = new MidiPlayer.Player(function(event) {
-    if (event.name === 'Note on' && event.velocity > 0) {
-      var inst = instruments[event.channel] || instruments[1];
-      if (inst) inst.play(event.noteName, ac.currentTime, { gain: event.velocity / 100 });
-    }
-  });
-
-  fetch('Here Comes The Sun.mid')
-    .then(function(r) { return r.arrayBuffer(); })
-    .then(function(buf) {
-      player.loadArrayBuffer(buf);
-      var tracks = player.getEvents();
-      var programMap = {};
-      tracks.forEach(function(track) {
-        track.forEach(function(ev) {
-          if (ev.name === 'Program Change') programMap[ev.channel] = ev.value;
-        });
-      });
-
-      var gmNames = ['acoustic_grand_piano','bright_acoustic_piano','electric_grand_piano','honkytonk_piano','electric_piano_1','electric_piano_2','harpsichord','clavinet','celesta','glockenspiel','music_box','vibraphone','marimba','xylophone','tubular_bells','dulcimer','drawbar_organ','percussive_organ','rock_organ','church_organ','reed_organ','accordion','harmonica','tango_accordion','acoustic_guitar_nylon','acoustic_guitar_steel','electric_guitar_jazz','electric_guitar_clean','electric_guitar_muted','overdriven_guitar','distortion_guitar','guitar_harmonics','acoustic_bass','electric_bass_finger','electric_bass_pick','fretless_bass','slap_bass_1','slap_bass_2','synth_bass_1','synth_bass_2','violin','viola','cello','contrabass','tremolo_strings','pizzicato_strings','orchestral_harp','timpani','string_ensemble_1','string_ensemble_2','synth_strings_1','synth_strings_2','choir_aahs','voice_oohs','synth_voice','orchestra_hit','trumpet','trombone','tuba','muted_trumpet','french_horn','brass_section','synth_brass_1','synth_brass_2','soprano_sax','alto_sax','tenor_sax','baritone_sax','oboe','english_horn','bassoon','clarinet','piccolo','flute','recorder','pan_flute','blown_bottle','shakuhachi','whistle','ocarina','lead_1_square','lead_2_sawtooth','lead_3_calliope','lead_4_chiff','lead_5_charang','lead_6_voice','lead_7_fifths','lead_8_bass_lead','pad_1_new_age','pad_2_warm','pad_3_polysynth','pad_4_choir','pad_5_bowed','pad_6_metallic','pad_7_halo','pad_8_sweep','fx_1_rain','fx_2_soundtrack','fx_3_crystal','fx_4_atmosphere','fx_5_brightness','fx_6_goblins','fx_7_echoes','fx_8_sci_fi','sitar','banjo','shamisen','koto','kalimba','bag_pipe','fiddle','shanai','tinkle_bell','agogo','steel_drums','woodblock','taiko_drum','melodic_tom','synth_drum','reverse_cymbal','guitar_fret_noise','breath_noise','seashore','bird_tweet','telephone_ring','helicopter','applause','gunshot'];
-      var needed = {};
-      Object.keys(programMap).forEach(function(ch) { needed[programMap[ch]] = true; });
-      if (Object.keys(programMap).length === 0) needed[0] = true;
-
-      var loads = Object.keys(needed).map(function(prog) {
-        var name = gmNames[prog] || 'acoustic_grand_piano';
-        return Soundfont.instrument(ac, name).then(function(inst) {
-          Object.keys(programMap).forEach(function(ch) {
-            if (programMap[ch] == prog) instruments[ch] = inst;
-          });
-          if (Object.keys(programMap).length === 0) instruments[1] = inst;
-        });
-      });
-
-      Promise.all(loads).then(function() {
-        midiReady = true;
-        if (playRequested) player.play();
-      });
-    });
+  var _midiReady = false;
+  var _playOnOpen = false;
 
   function abrirInvitacion() {
     var sobre = document.getElementById('sobre');
     sobre.classList.add('salir');
     setTimeout(function() { sobre.style.display = 'none'; }, 700);
+    _iniciarMusica();
+  }
 
-    if (ac.state === 'suspended') ac.resume();
-    if (midiReady) {
-      player.play();
+  function _iniciarMusica() {
+    if (typeof _ac === 'undefined' || !_ac) return;
+    if (_ac.state === 'suspended') _ac.resume();
+    if (_midiReady) {
+      _player.play();
     } else {
-      playRequested = true;
+      _playOnOpen = true;
     }
   }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/midi-player-js@2.0.16/browser/midiplayer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/soundfont-player@0.12.0/dist/soundfont-player.min.js"></script>
+<script>
+  try {
+    var AudioCtx = window.AudioContext || window.webkitAudioContext;
+    var _ac = new AudioCtx();
+    var _instruments = {};
+
+    var _player = new MidiPlayer.Player(function(event) {
+      if (event.name === 'Note on' && event.velocity > 0) {
+        var inst = _instruments[event.channel] || _instruments[1];
+        if (inst) inst.play(event.noteName, _ac.currentTime, { gain: event.velocity / 100 });
+      }
+    });
+
+    var gmNames = ['acoustic_grand_piano','bright_acoustic_piano','electric_grand_piano','honkytonk_piano','electric_piano_1','electric_piano_2','harpsichord','clavinet','celesta','glockenspiel','music_box','vibraphone','marimba','xylophone','tubular_bells','dulcimer','drawbar_organ','percussive_organ','rock_organ','church_organ','reed_organ','accordion','harmonica','tango_accordion','acoustic_guitar_nylon','acoustic_guitar_steel','electric_guitar_jazz','electric_guitar_clean','electric_guitar_muted','overdriven_guitar','distortion_guitar','guitar_harmonics','acoustic_bass','electric_bass_finger','electric_bass_pick','fretless_bass','slap_bass_1','slap_bass_2','synth_bass_1','synth_bass_2','violin','viola','cello','contrabass','tremolo_strings','pizzicato_strings','orchestral_harp','timpani','string_ensemble_1','string_ensemble_2','synth_strings_1','synth_strings_2','choir_aahs','voice_oohs','synth_voice','orchestra_hit','trumpet','trombone','tuba','muted_trumpet','french_horn','brass_section','synth_brass_1','synth_brass_2','soprano_sax','alto_sax','tenor_sax','baritone_sax','oboe','english_horn','bassoon','clarinet','piccolo','flute','recorder','pan_flute','blown_bottle','shakuhachi','whistle','ocarina','lead_1_square','lead_2_sawtooth','lead_3_calliope','lead_4_chiff','lead_5_charang','lead_6_voice','lead_7_fifths','lead_8_bass_lead','pad_1_new_age','pad_2_warm','pad_3_polysynth','pad_4_choir','pad_5_bowed','pad_6_metallic','pad_7_halo','pad_8_sweep','fx_1_rain','fx_2_soundtrack','fx_3_crystal','fx_4_atmosphere','fx_5_brightness','fx_6_goblins','fx_7_echoes','fx_8_sci_fi','sitar','banjo','shamisen','koto','kalimba','bag_pipe','fiddle','shanai','tinkle_bell','agogo','steel_drums','woodblock','taiko_drum','melodic_tom','synth_drum','reverse_cymbal','guitar_fret_noise','breath_noise','seashore','bird_tweet','telephone_ring','helicopter','applause','gunshot'];
+
+    fetch('Here%20Comes%20The%20Sun.mid')
+      .then(function(r) { return r.arrayBuffer(); })
+      .then(function(buf) {
+        _player.loadArrayBuffer(buf);
+        var tracks = _player.getEvents();
+        var programMap = {};
+        tracks.forEach(function(track) {
+          track.forEach(function(ev) {
+            if (ev.name === 'Program Change') programMap[ev.channel] = ev.value;
+          });
+        });
+
+        var needed = {};
+        Object.keys(programMap).forEach(function(ch) { needed[programMap[ch]] = true; });
+        if (Object.keys(programMap).length === 0) needed[0] = true;
+
+        var loads = Object.keys(needed).map(function(prog) {
+          var name = gmNames[prog] || 'acoustic_grand_piano';
+          return Soundfont.instrument(_ac, name).then(function(inst) {
+            Object.keys(programMap).forEach(function(ch) {
+              if (programMap[ch] == prog) _instruments[ch] = inst;
+            });
+            if (Object.keys(programMap).length === 0) _instruments[1] = inst;
+          });
+        });
+
+        Promise.all(loads).then(function() {
+          _midiReady = true;
+          if (_playOnOpen) _player.play();
+        });
+      })
+      .catch(function() {});
+  } catch(e) {}
 </script>
