@@ -1,5 +1,8 @@
-
 <!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=Righteous&family=Pacifico&display=swap');
 
@@ -394,6 +397,8 @@
 }
 
 .sobre-envelope {
+  width: min(85vw, 340px);
+  height: auto;
   filter: drop-shadow(0 8px 32px rgba(245,200,66,0.3));
   animation: flotar 3s ease-in-out infinite;
 }
@@ -467,6 +472,8 @@
   100% { transform: scale(1.6); opacity: 0; }
 }
 </style>
+</head>
+<body>
 
 <button id="bocina" class="inactiva" onclick="toggleMusica()">🔇</button>
 
@@ -495,7 +502,7 @@
     <div class="sobre-titulo">✦ tienes una invitación ✦</div>
 
     <!-- Sobre / Envelope SVG -->
-    <svg class="sobre-envelope" viewBox="0 0 320 210" width="300" height="197">
+    <svg class="sobre-envelope" viewBox="0 0 320 210">
       <!-- cuerpo del sobre -->
       <rect x="2" y="2" width="316" height="206" rx="10" fill="#f0e8d8" stroke="#c8380a" stroke-width="4"/>
       <!-- pliegues inferiores -->
@@ -745,3 +752,5 @@
     b.className = activa ? 'activa' : 'inactiva';
   }
 </script>
+</body>
+</html>
