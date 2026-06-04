@@ -430,7 +430,45 @@
   transform: translateY(3px);
   box-shadow: 0 1px 0 #c8380a;
 }
+
+/* ===== BOCINA ===== */
+#bocina {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 22px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 150;
+  transition: background 0.3s, transform 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.35);
+}
+#bocina.inactiva { background: #2d1a4a; }
+#bocina.activa   { background: #c8380a; }
+#bocina:active   { transform: scale(0.9); }
+
+#bocina.activa::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 2px solid #c8380a;
+  animation: bocina-onda 1.6s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes bocina-onda {
+  0%   { transform: scale(1);   opacity: 0.7; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
 </style>
+
+<button id="bocina" class="inactiva" onclick="toggleMusica()">🔇</button>
 
 <!-- SOBRE OVERLAY -->
 <div id="sobre">
@@ -677,11 +715,16 @@
 <script>
   var _midiReady = false;
   var _playOnOpen = false;
+  var _playing = false;
 
   function abrirInvitacion() {
     var sobre = document.getElementById('sobre');
     sobre.classList.add('salir');
     setTimeout(function() { sobre.style.display = 'none'; }, 700);
+
+    var bocina = document.getElementById('bocina');
+    bocina.style.display = 'flex';
+
     _iniciarMusica();
   }
 
@@ -690,9 +733,26 @@
     if (_ac.state === 'suspended') _ac.resume();
     if (_midiReady) {
       _player.play();
+      _setBocina(true);
     } else {
       _playOnOpen = true;
     }
+  }
+
+  function toggleMusica() {
+    if (_playing) {
+      if (typeof _player !== 'undefined') _player.pause();
+      _setBocina(false);
+    } else {
+      _iniciarMusica();
+    }
+  }
+
+  function _setBocina(activa) {
+    _playing = activa;
+    var b = document.getElementById('bocina');
+    b.textContent = activa ? '🔊' : '🔇';
+    b.className = activa ? 'activa' : 'inactiva';
   }
 </script>
 
@@ -741,9 +801,17 @@
 
         Promise.all(loads).then(function() {
           _midiReady = true;
-          if (_playOnOpen) _player.play();
+          if (_playOnOpen) {
+            _player.play();
+            _setBocina(true);
+          }
         });
       })
       .catch(function() {});
+
+    _player.on('endOfFile', function() {
+      _player.stop();
+      _player.play();
+    });
   } catch(e) {}
 </script>
