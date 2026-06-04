@@ -354,7 +354,135 @@
   animation: wheelSpin 1.2s linear infinite;
   transform-origin: center;
 }
+
+/* ===== SOBRE OVERLAY ===== */
+#sobre {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #1a0d33;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  overflow: hidden;
+}
+
+#sobre.salir {
+  opacity: 0;
+  transform: scale(1.08);
+  pointer-events: none;
+}
+
+.sobre-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  padding: 24px;
+}
+
+.sobre-titulo {
+  font-family: 'Pacifico', cursive;
+  color: #f5c842;
+  font-size: 15px;
+  letter-spacing: 4px;
+  text-align: center;
+}
+
+.sobre-envelope {
+  filter: drop-shadow(0 8px 32px rgba(245,200,66,0.3));
+  animation: flotar 3s ease-in-out infinite;
+}
+
+@keyframes flotar {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+.sobre-texto {
+  font-family: 'Righteous', sans-serif;
+  color: #d4c0f0;
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.sobre-btn {
+  font-family: 'Pacifico', cursive;
+  font-size: 20px;
+  color: #2d1a4a;
+  background: #f5c842;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 38px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #c8380a, 0 8px 20px rgba(200,56,10,0.35);
+  transition: transform 0.1s, box-shadow 0.1s;
+  letter-spacing: 1px;
+}
+
+.sobre-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #c8380a;
+}
 </style>
+
+<!-- SOBRE OVERLAY -->
+<div id="sobre">
+  <!-- Fondo 70s con elementos decorativos -->
+  <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;" preserveAspectRatio="xMidYMid slice" viewBox="0 0 400 700">
+    <!-- flores y paces scattered -->
+    <text x="20"  y="80"  font-size="40" fill="#c8380a" opacity="0.18">✿</text>
+    <text x="340" y="60"  font-size="30" fill="#e8a020" opacity="0.18">☮</text>
+    <text x="10"  y="300" font-size="24" fill="#4a8fa0" opacity="0.15">✾</text>
+    <text x="360" y="260" font-size="36" fill="#f5c842" opacity="0.15">✿</text>
+    <text x="180" y="30"  font-size="20" fill="#c8380a" opacity="0.12">☮</text>
+    <text x="50"  y="580" font-size="32" fill="#e8a020" opacity="0.18">✿</text>
+    <text x="320" y="600" font-size="26" fill="#4a8fa0" opacity="0.15">✾</text>
+    <text x="200" y="660" font-size="20" fill="#f5c842" opacity="0.12">☮</text>
+    <text x="120" y="420" font-size="16" fill="#c8380a" opacity="0.12">✿</text>
+    <text x="290" y="440" font-size="22" fill="#e8a020" opacity="0.13">☮</text>
+    <!-- líneas groovy de fondo -->
+    <circle cx="200" cy="350" r="280" fill="none" stroke="#f5c842" stroke-width="1" opacity="0.06"/>
+    <circle cx="200" cy="350" r="200" fill="none" stroke="#c8380a" stroke-width="1" opacity="0.06"/>
+    <circle cx="200" cy="350" r="120" fill="none" stroke="#4a8fa0" stroke-width="1" opacity="0.06"/>
+  </svg>
+
+  <div class="sobre-content">
+    <div class="sobre-titulo">✦ tienes una invitación ✦</div>
+
+    <!-- Sobre / Envelope SVG -->
+    <svg class="sobre-envelope" viewBox="0 0 320 210" width="300" height="197">
+      <!-- cuerpo del sobre -->
+      <rect x="2" y="2" width="316" height="206" rx="10" fill="#f0e8d8" stroke="#c8380a" stroke-width="4"/>
+      <!-- pliegues inferiores -->
+      <path d="M2,208 L148,112 M318,208 L172,112" stroke="#c8380a" stroke-width="1.5" opacity="0.3"/>
+      <!-- solapa superior -->
+      <path d="M2,2 L160,118 L318,2 Z" fill="#e8c87a" stroke="#c8380a" stroke-width="3"/>
+      <!-- sello de paz -->
+      <circle cx="266" cy="48" r="26" fill="#c8380a"/>
+      <circle cx="266" cy="48" r="19" fill="none" stroke="#f5c842" stroke-width="2"/>
+      <line x1="266" y1="29" x2="266" y2="67" stroke="#f5c842" stroke-width="2"/>
+      <line x1="266" y1="48" x2="252" y2="62" stroke="#f5c842" stroke-width="2"/>
+      <line x1="266" y1="48" x2="280" y2="62" stroke="#f5c842" stroke-width="2"/>
+      <!-- flores decorativas en el sobre -->
+      <text x="30"  y="180" font-size="22" fill="#c8380a" opacity="0.5">✿</text>
+      <text x="68"  y="190" font-size="14" fill="#4a8fa0" opacity="0.45">✾</text>
+      <text x="195" y="185" font-size="18" fill="#e8a020" opacity="0.5">✿</text>
+      <!-- texto "Para: ti" -->
+      <text x="100" y="168" font-family="Pacifico, cursive" font-size="17" fill="#6b3a1f">Para: ti ✿</text>
+    </svg>
+
+    <div class="sobre-texto">una sorpresa te espera adentro</div>
+
+    <button class="sobre-btn" onclick="abrirInvitacion()">✉ Abrir Invitación</button>
+  </div>
+</div>
 
 <div class="page">
 
@@ -551,6 +679,9 @@
   var AudioContext = window.AudioContext || window.webkitAudioContext;
   var ac = new AudioContext();
   var instruments = {};
+  var midiReady = false;
+  var playRequested = false;
+
   var player = new MidiPlayer.Player(function(event) {
     if (event.name === 'Note on' && event.velocity > 0) {
       var inst = instruments[event.channel] || instruments[1];
@@ -585,6 +716,22 @@
         });
       });
 
-      Promise.all(loads).then(function() { player.play(); });
+      Promise.all(loads).then(function() {
+        midiReady = true;
+        if (playRequested) player.play();
+      });
     });
+
+  function abrirInvitacion() {
+    var sobre = document.getElementById('sobre');
+    sobre.classList.add('salir');
+    setTimeout(function() { sobre.style.display = 'none'; }, 700);
+
+    if (ac.state === 'suspended') ac.resume();
+    if (midiReady) {
+      player.play();
+    } else {
+      playRequested = true;
+    }
+  }
 </script>
