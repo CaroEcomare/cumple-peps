@@ -6,7 +6,29 @@
       "Bash(git -C /Users/caroaguilar/CODE/cumple-peps add \"Here Comes The Sun.mp3\" index.html)",
       "Bash(git check-ignore *)",
       "Bash(git commit -m ' *)",
-      "Bash(git rm *)"
+      "Bash(git rm *)",
+      "Bash(awk '{ print NR\": \"length\\($0\\) }' photobooth.html)",
+      "Bash(sort -t: -k2 -rn)",
+      "Skill(run)",
+      "Skill(run:*)",
+      "Bash(npx --yes playwright --version)",
+      "Bash(npx playwright *)",
+      "Bash(node -e ' *)",
+      "Bash(npm ls *)",
+      "Bash(find / -maxdepth 6 -path \"*/node_modules/playwright\" -type d)",
+      "Read(//private/tmp/**)",
+      "Bash(npm init *)",
+      "Bash(npm install *)",
+      "Bash(mkdir -p /tmp/shots)",
+      "Bash(node screenshot.js)",
+      "Bash(node measure.js)",
+      "Bash(node measure2.js)",
+      "Bash(node measure3.js)",
+      "Bash(node interact.js)"
+    ],
+    "additionalDirectories": [
+      "/tmp",
+      "/private/tmp"
     ]
   }
 }
