@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Fotobooth · El Peps cumple 60</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Righteous&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;background:#1a0a2e;font-family:'Righteous',sans-serif;}
+body{display:flex;flex-direction:column;align-items:center;min-height:100vh;}
+.hdr{width:100%;background:#c8380a;padding:10px 16px 8px;text-align:center;}
+.hdr-t{font-family:'Pacifico',cursive;color:#f5c842;font-size:20px;text-shadow:2px 2px 0 #8b1500;}
+.hdr-s{font-size:10px;color:#f0e8d8;letter-spacing:3px;text-transform:uppercase;}
+.strip{width:100%;height:7px;display:flex;}
+.s1{background:#c8380a;flex:1}.s2{background:#e8a020;flex:1}.s3{background:#4a8fa0;flex:1}.s4{background:#d4960a;flex:1}.s5{background:#6b3a1f;flex:1}
+.tabs{display:flex;gap:5px;padding:8px 10px;flex-wrap:wrap;justify-content:center;width:100%;}
+.tab{background:#2d1a4a;border:2px solid #4a8fa0;border-radius:20px;padding:5px 14px;color:#f5c842;font-size:11px;cursor:pointer;font-family:'Righteous',sans-serif;letter-spacing:1px;transition:all .2s;}
+.tab.on{background:#c8380a;border-color:#f5c842;color:#fff;}
+.cam{position:relative;width:100%;max-width:480px;aspect-ratio:3/4;background:#111;overflow:hidden;}
+video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);}
+.ov{position:absolute;inset:0;pointer-events:none;z-index:10;width:100%;height:100%;}
+.prev{position:absolute;inset:0;z-index:20;display:none;}
+.prev img{width:100%;height:100%;object-fit:cover;}
+.cdw{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Pacifico',cursive;font-size:88px;color:#f5c842;text-shadow:3px 3px 0 #c8380a;z-index:30;display:none;pointer-events:none;}
+.fl{position:absolute;inset:0;background:#fff;opacity:0;z-index:25;pointer-events:none;transition:opacity .05s;}
+canvas{display:none;}
+.btns{display:flex;gap:8px;padding:10px 12px;justify-content:center;align-items:center;width:100%;}
+.shoot{width:62px;height:62px;border-radius:50%;background:#c8380a;border:4px solid #f5c842;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.shoot:active{transform:scale(.93);}
+.btn{background:#2d1a4a;border:2px solid #4a8fa0;border-radius:10px;padding:8px 14px;color:#f5c842;font-size:12px;cursor:pointer;font-family:'Righteous',sans-serif;}
+.btn.hide{display:none;}
+.btn.gr{background:#2d6b2a;border-color:#5dba58;color:#fff;}
+.flip{background:#2d1a4a;border:2px solid #4a8fa0;border-radius:50%;width:38px;height:38px;color:#f5c842;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.hint{font-size:11px;color:#b8a0e0;letter-spacing:2px;text-align:center;padding:3px 0 6px;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-t">Fotobooth del Peps 📸</div>
+  <div class="hdr-s">¡El Peps cumple 60!</div>
+</div>
+<div class="strip"><div class="s1"></div><div class="s2"></div><div class="s3"></div><div class="s4"></div><div class="s5"></div></div>
+
+<div class="tabs">
+  <button class="tab on" onclick="sf('flores',this)">🌸 Flores</button>
+  <button class="tab" onclick="sf('vinilos',this)">🎵 Vinilos</button>
+  <button class="tab" onclick="sf('ondas',this)">〰️ Ondas</button>
+  <button class="tab" onclick="sf('disco',this)">🪩 Disco</button>
+  <button class="tab" onclick="sf('collage',this)">🎶 Collage</button>
+</div>
+
+<div class="cam" id="cam">
+  <video id="vid" autoplay playsinline muted></video>
+  <svg class="ov" id="svg" viewBox="0 0 360 480" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="ballGrad" cx="33%" cy="28%">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="35%" stop-color="#bbbbbb"/>
+        <stop offset="100%" stop-color="#2a2a2a"/>
+      </radialGradient>
+      <!-- Máscara para dejar zona central libre -->
+      <mask id="centerClear">
+        <rect width="360" height="480" fill="white"/>
+        <!-- Zona libre: desde y=72 hasta y=408, x=0 a x=360 -->
+        <rect x="50" y="80" width="260" height="310" fill="black"/>
+      </mask>
+    </defs>
+    <g id="frameContent"></g>
+  </svg>
+  <div class="cdw" id="cdw"></div>
+  <div class="fl" id="fl"></div>
+  <div class="prev" id="prev"><img id="pimg" src="" alt="foto"/></div>
+</div>
+<canvas id="cv"></canvas>
+
+<div class="hint" id="hint">Elige un marco y toca 📸</div>
+<div class="btns">
+  <button class="flip" onclick="fc()">🔄</button>
+  <button class="btn hide" id="rb" onclick="retake()">↩ Repetir</button>
+  <button class="shoot" onclick="go()">📸</button>
+  <button class="btn hide gr" id="sb" onclick="savePh()">⬇ Guardar</button>
+</div>
+<div class="strip"><div class="s5"></div><div class="s4"></div><div class="s3"></div><div class="s2"></div><div class="s1"></div></div>
+
+<script>
+const vid=document.getElementById('vid');
+const frameContent=document.getElementById('frameContent');
+const cdw=document.getElementById('cdw');
+const fl=document.getElementById('fl');
+const prev=document.getElementById('prev');
+const pimg=document.getElementById('pimg');
+const cv=document.getElementById('cv');
+const rb=document.getElementById('rb');
+const sb=document.getElementById('sb');
+const hint=document.getElementById('hint');
+let fm='user', taken=false, stream=null;
+
+async function startCam(){
+  if(stream) stream.getTracks().forEach(t=>t.stop());
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:fm},audio:false});
+    vid.srcObject=stream;
+  } catch(e){
+    hint.textContent='Permite el acceso a la cámara ☝️';
+    hint.style.color='#e8a020';
+  }
+}
+async function fc(){ fm=fm==='user'?'environment':'user'; await startCam(); }
+startCam();
+
+// ── HELPERS ──────────────────────────────────────────────────
+// La zona central libre es: x=50..310, y=80..390 (260x310px en viewBox 360x480)
+// TODOS los marcos solo ponen elementos FUERA de esa zona
+
+function D(cx,cy,r,c1,c2,c3){
+  let o='';
+  for(let i=0;i<8;i++){
+    const a=(i/8)*Math.PI*2;
+    const px=cx+Math.cos(a)*r*.58, py=cy+Math.sin(a)*r*.58;
+    o+=`<ellipse cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" rx="${(r*.28).toFixed(1)}" ry="${(r*.44).toFixed(1)}" transform="rotate(${((a*180/Math.PI)+90).toFixed(1)} ${px.toFixed(1)} ${py.toFixed(1)})" fill="${c1}"/>`;
+  }
+  return o+`<circle cx="${cx}" cy="${cy}" r="${(r*.32).toFixed(1)}" fill="${c2}"/>
+  <circle cx="${cx}" cy="${cy}" r="${(r*.13).toFixed(1)}" fill="${c3}"/>`;
+}
+function V(cx,cy,r,lc){
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#111"/>
+  <circle cx="${cx}" cy="${cy}" r="${(r*.78).toFixed(1)}" fill="none" stroke="#1a1a1a" stroke-width="${(r*.14).toFixed(1)}"/>
+  <circle cx="${cx}" cy="${cy}" r="${(r*.56).toFixed(1)}" fill="none" stroke="#131313" stroke-width="${(r*.11).toFixed(1)}"/>
+  <circle cx="${cx}" cy="${cy}" r="${(r*.37).toFixed(1)}" fill="${lc}"/>
+  <circle cx="${cx}" cy="${cy}" r="${(r*.08).toFixed(1)}" fill="#111"/>`;
+}
+function C(x,y,w,h,col){
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${(h*.15).toFixed(1)}" fill="${col}"/>
+  <rect x="${(x+w*.08).toFixed(1)}" y="${(y+h*.1).toFixed(1)}" width="${(w*.84).toFixed(1)}" height="${(h*.5).toFixed(1)}" rx="${(h*.1).toFixed(1)}" fill="rgba(0,0,0,.28)"/>
+  <circle cx="${(x+w*.3).toFixed(1)}" cy="${(y+h*.37).toFixed(1)}" r="${(h*.15).toFixed(1)}" fill="#1a1a1a"/>
+  <circle cx="${(x+w*.7).toFixed(1)}" cy="${(y+h*.37).toFixed(1)}" r="${(h*.15).toFixed(1)}" fill="#1a1a1a"/>
+  <circle cx="${(x+w*.3).toFixed(1)}" cy="${(y+h*.37).toFixed(1)}" r="${(h*.06).toFixed(1)}" fill="${col}" opacity=".55"/>
+  <circle cx="${(x+w*.7).toFixed(1)}" cy="${(y+h*.37).toFixed(1)}" r="${(h*.06).toFixed(1)}" fill="${col}" opacity=".55"/>`;
+}
+function N(x,y,s,col){ return `<text x="${x}" y="${y}" font-size="${s}" fill="${col}" font-family="serif">♪</text>`; }
+
+// Badges: título arriba (y=8..42), info abajo (y=442..468)
+function TB(bg,fg){
+  return `<rect x="38" y="6" width="284" height="36" rx="18" fill="${bg}" opacity=".95"/>
+  <text x="180" y="30" text-anchor="middle" font-family="Pacifico,cursive" font-size="14" fill="${fg}">¡El Peps cumple 60!</text>`;
+}
+function BB(bg,fg){
+  return `<rect x="50" y="444" width="260" height="28" rx="14" fill="${bg}" opacity=".95"/>
+  <text x="180" y="462" text-anchor="middle" font-family="Righteous,sans-serif" font-size="11" fill="${fg}" letter-spacing="1">13 JUNIO 2026</text>`;
+}
+
+// Zona libre: x 50-310, y 80-390
+// Franjas disponibles:
+//   TOP:    y  0..80   (todo x)
+//   BOTTOM: y 390..480 (todo x)
+//   LEFT:   x  0..50   (y 80..390)
+//   RIGHT:  x 310..360 (y 80..390)
+
+const frames = {
+
+  // 1. FLORES — daisies en bordes, centro libre
+  flores: ()=>`
+    <rect x="0" y="0" width="360" height="80" fill="#f5e6c0" opacity=".97"/>
+    <rect x="0" y="390" width="360" height="90" fill="#f5e6c0" opacity=".97"/>
+    <rect x="0" y="80" width="52" height="310" fill="#f5e6c0" opacity=".95"/>
+    <rect x="308" y="80" width="52" height="310" fill="#f5e6c0" opacity=".95"/>
+    <path d="M0,78 Q60,62 120,78 Q180,94 240,78 Q300,62 360,78 L360,82 Q300,66 240,82 Q180,98 120,82 Q60,66 0,82Z" fill="#c8380a"/>
+    <path d="M0,388 Q60,372 120,388 Q180,404 240,388 Q300,372 360,388 L360,392 Q300,376 240,392 Q180,408 120,392 Q60,376 0,392Z" fill="#c8380a"/>
+    ${D(26,40,24,'#c8380a','#e8a020','#f5c842')}
+    ${D(334,40,24,'#4a8fa0','#f5c842','#c8380a')}
+    ${D(26,440,24,'#d4960a','#c8380a','#f0e8d8')}
+    ${D(334,440,24,'#c8380a','#4a8fa0','#f5c842')}
+    ${D(120,40,15,'#4a8fa0','#c8380a','#f5c842')}
+    ${D(180,36,17,'#c8380a','#f5c842','#4a8fa0')}
+    ${D(240,40,15,'#e8a020','#c8380a','#f5c842')}
+    ${D(120,440,15,'#c8380a','#e8a020','#4a8fa0')}
+    ${D(180,444,17,'#4a8fa0','#f5c842','#c8380a')}
+    ${D(240,440,15,'#e8a020','#c8380a','#f5c842')}
+    ${D(26,160,13,'#4a8fa0','#f5c842','#c8380a')}
+    ${D(26,235,13,'#c8380a','#e8a020','#fff')}
+    ${D(26,310,13,'#e8a020','#c8380a','#4a8fa0')}
+    ${D(334,160,13,'#c8380a','#f5c842','#4a8fa0')}
+    ${D(334,235,13,'#4a8fa0','#c8380a','#f5c842')}
+    ${D(334,310,13,'#e8a020','#f5c842','#c8380a')}
+    ${TB('#c8380a','#f5c842')}${BB('#2d1a4a','#f5c842')}`,
+
+  // 2. VINILOS — discos en top y bottom, laterales delgados
+  vinilos: ()=>`
+    <rect width="360" height="480" fill="none"/>
+    <rect x="0" y="0" width="360" height="80" fill="#0d0d0d" opacity=".97"/>
+    <rect x="0" y="390" width="360" height="90" fill="#0d0d0d" opacity=".97"/>
+    <rect x="0" y="80" width="48" height="310" fill="#0d0d0d" opacity=".92"/>
+    <rect x="312" y="80" width="48" height="310" fill="#0d0d0d" opacity=".92"/>
+    ${V(22,24,'#c8380a',22)}${V(68,20,18,'#4a8fa0')}${V(114,26,22,'#e8a020')}
+    ${V(180,20,18,'#c8380a')}${V(246,26,22,'#4a8fa0')}${V(294,20,18,'#d4960a')}${V(338,26,20,'#c8380a')}
+    ${N(44,56,14,'#4a8fa0')}${N(138,50,13,'#f5c842')}${N(264,56,14,'#e8a020')}
+    ${V(22,416,20,'#4a8fa0')}${V(68,424,16,'#c8380a')}${V(114,416,20,'#e8a020')}
+    ${V(180,424,16,'#c8380a')}${V(246,416,20,'#d4960a')}${V(294,424,16,'#e8a020')}${V(338,416,18,'#4a8fa0')}
+    ${N(44,456,14,'#f5c842')}${N(168,448,13,'#4a8fa0')}${N(264,456,14,'#c8380a')}
+    ${V(24,150,20,'#e8a020')}${V(24,240,20,'#c8380a')}${V(24,330,20,'#4a8fa0')}
+    ${V(336,150,20,'#c8380a')}${V(336,240,20,'#d4960a')}${V(336,330,20,'#e8a020')}
+    ${TB('#c8380a','#f5c842')}${BB('#c8380a','#f5c842')}`,
+
+  // 3. ONDAS — ondas solo en top y bottom, limpias
+  ondas: ()=>`
+    <rect width="360" height="480" fill="none"/>
+    <rect x="0" y="0" width="360" height="80" fill="#f0e8d8" opacity=".97"/>
+    <rect x="0" y="390" width="360" height="90" fill="#f0e8d8" opacity=".97"/>
+    <rect x="0" y="80" width="48" height="310" fill="#f0e8d8" opacity=".92"/>
+    <rect x="312" y="80" width="48" height="310" fill="#f0e8d8" opacity=".92"/>
+    <path d="M0,10 Q90,-8 180,10 Q270,28 360,10 L360,28 Q270,46 180,28 Q90,10 0,28Z" fill="#4a8fa0"/>
+    <path d="M0,24 Q90,6 180,24 Q270,42 360,24 L360,32 Q270,50 180,32 Q90,14 0,32Z" fill="#f0e8d8"/>
+    <path d="M0,28 Q90,10 180,28 Q270,46 360,28 L360,48 Q270,66 180,48 Q90,30 0,48Z" fill="#c8380a"/>
+    <path d="M0,44 Q90,26 180,44 Q270,62 360,44 L360,52 Q270,70 180,52 Q90,34 0,52Z" fill="#f0e8d8"/>
+    <path d="M0,48 Q90,30 180,48 Q270,66 360,48 L360,68 Q270,86 180,68 Q90,50 0,68Z" fill="#e8a020"/>
+    <path d="M0,64 Q90,46 180,64 Q270,82 360,64 L360,72 Q270,90 180,72 Q90,54 0,72Z" fill="#f0e8d8"/>
+    <path d="M0,398 Q90,382 180,398 Q270,414 360,398 L360,418 Q270,434 180,418 Q90,402 0,418Z" fill="#4a8fa0"/>
+    <path d="M0,414 Q90,398 180,414 Q270,430 360,414 L360,422 Q270,438 180,422 Q90,406 0,422Z" fill="#f0e8d8"/>
+    <path d="M0,418 Q90,402 180,418 Q270,434 360,418 L360,438 Q270,454 180,438 Q90,422 0,438Z" fill="#c8380a"/>
+    <path d="M0,434 Q90,418 180,434 Q270,450 360,434 L360,442 Q270,458 180,442 Q90,426 0,442Z" fill="#f0e8d8"/>
+    <path d="M0,438 Q90,422 180,438 Q270,454 360,438 L360,458 Q270,474 180,458 Q90,442 0,458Z" fill="#e8a020"/>
+    ${D(26,160,13,'#c8380a','#e8a020','#f5c842')}${D(26,235,13,'#4a8fa0','#f5c842','#c8380a')}${D(26,310,13,'#e8a020','#c8380a','#f5c842')}
+    ${D(334,160,13,'#4a8fa0','#c8380a','#f5c842')}${D(334,235,13,'#c8380a','#f5c842','#4a8fa0')}${D(334,310,13,'#e8a020','#f5c842','#c8380a')}
+    <text x="14" y="235" font-size="24" fill="#c8380a" opacity=".7">☮</text>
+    <text x="330" y="310" font-size="24" fill="#4a8fa0" opacity=".7">☮</text>
+    ${TB('#2d1a4a','#f5c842')}${BB('#2d1a4a','#f5c842')}`,
+
+  // 4. DISCO — oscuro, bola arriba, rayos solo en bordes
+  disco: ()=>`
+    <rect width="360" height="480" fill="none"/>
+    <rect x="0" y="0" width="360" height="80" fill="#080414" opacity=".97"/>
+    <rect x="0" y="390" width="360" height="90" fill="#080414" opacity=".97"/>
+    <rect x="0" y="80" width="48" height="310" fill="#080414" opacity=".92"/>
+    <rect x="312" y="80" width="48" height="310" fill="#080414" opacity=".92"/>
+    <text x="6" y="140" font-size="13" fill="#f5c842" opacity=".9">✦</text>
+    <text x="6" y="200" font-size="10" fill="#e8a020" opacity=".8">★</text>
+    <text x="6" y="260" font-size="13" fill="#4a8fa0" opacity=".8">✦</text>
+    <text x="6" y="320" font-size="10" fill="#f5c842" opacity=".7">★</text>
+    <text x="6" y="380" font-size="13" fill="#e8a020" opacity=".8">✦</text>
+    <text x="342" y="140" font-size="13" fill="#4a8fa0" opacity=".9">✦</text>
+    <text x="342" y="200" font-size="10" fill="#f5c842" opacity=".8">★</text>
+    <text x="342" y="260" font-size="13" fill="#c8380a" opacity=".8">✦</text>
+    <text x="342" y="320" font-size="10" fill="#e8a020" opacity=".7">★</text>
+    <text x="342" y="380" font-size="13" fill="#f5c842" opacity=".8">✦</text>
+    <rect x="0" y="80" width="6" height="310" fill="#c8380a" opacity=".8"/>
+    <rect x="6" y="80" width="4" height="310" fill="#e8a020" opacity=".7"/>
+    <rect x="350" y="80" width="6" height="310" fill="#4a8fa0" opacity=".8"/>
+    <rect x="344" y="80" width="6" height="310" fill="#d4960a" opacity=".7"/>
+    <line x1="180" y1="0" x2="180" y2="14" stroke="#888" stroke-width="2"/>
+    <circle cx="180" cy="44" r="30" fill="#a0a0a0"/>
+    <circle cx="180" cy="44" r="29" fill="url(#ballGrad)"/>
+    <g opacity=".25" stroke="#000" stroke-width=".7">
+      <line x1="151" y1="44" x2="209" y2="44"/><line x1="153" y1="34" x2="207" y2="34"/>
+      <line x1="153" y1="54" x2="207" y2="54"/><line x1="180" y1="14" x2="180" y2="74"/>
+      <line x1="162" y1="16" x2="162" y2="72"/><line x1="198" y1="16" x2="198" y2="72"/>
+    </g>
+    <line x1="153" y1="32" x2="100" y2="8" stroke="#f5c842" stroke-width="1.5" opacity=".65"/>
+    <line x1="207" y1="32" x2="260" y2="8" stroke="#c8380a" stroke-width="1.5" opacity=".65"/>
+    <line x1="150" y1="46" x2="90" y2="52" stroke="#4a8fa0" stroke-width="1.5" opacity=".65"/>
+    <line x1="210" y1="46" x2="270" y2="52" stroke="#e8a020" stroke-width="1.5" opacity=".65"/>
+    ${D(20,420,13,'#c8380a','#f5c842','#2d1a4a')}${D(340,420,13,'#4a8fa0','#f5c842','#2d1a4a')}
+    ${D(20,455,13,'#e8a020','#c8380a','#2d1a4a')}${D(340,455,13,'#f5c842','#c8380a','#2d1a4a')}
+    <text x="60" y="465" font-size="13" fill="#f5c842" opacity=".7">✦</text>
+    <text x="180" y="468" font-size="10" fill="#e8a020" opacity=".6">★</text>
+    <text x="280" y="465" font-size="13" fill="#4a8fa0" opacity=".7">✦</text>
+    ${TB('#c8380a','#f5c842')}${BB('#c8380a','#f5c842')}`,
+
+  // 5. COLLAGE — casetes/vinilos/daisies solo en top, bottom y laterales
+  collage: ()=>`
+    <rect width="360" height="480" fill="none"/>
+    <rect x="0" y="0" width="360" height="80" fill="#f5e6c0" opacity=".97"/>
+    <rect x="0" y="390" width="360" height="90" fill="#f5e6c0" opacity=".97"/>
+    <rect x="0" y="80" width="50" height="310" fill="#f5e6c0" opacity=".95"/>
+    <rect x="310" y="80" width="50" height="310" fill="#f5e6c0" opacity=".95"/>
+    ${V(18,20,16,'#c8380a')}${V(56,14,13,'#4a8fa0')}${V(96,20,16,'#e8a020')}
+    ${V(148,14,13,'#c8380a')}${V(200,20,16,'#4a8fa0')}${V(252,14,13,'#d4960a')}
+    ${V(304,20,16,'#c8380a')}${V(348,14,13,'#e8a020')}
+    ${C(0,38,52,30,'#c8380a')}${C(56,42,52,30,'#4a8fa0')}${C(112,38,52,30,'#e8a020')}
+    ${C(168,42,52,30,'#6b3a1f')}${C(224,38,52,30,'#c8380a')}${C(280,42,52,30,'#4a8fa0')}${C(308,38,52,30,'#e8a020')}
+    ${N(53,60,13,'#2d1a4a')}${N(160,55,12,'#c8380a')}${N(270,60,13,'#4a8fa0')}
+    ${V(18,410,16,'#4a8fa0')}${V(56,418,13,'#c8380a')}${V(96,410,16,'#e8a020')}
+    ${V(148,418,13,'#c8380a')}${V(200,410,16,'#4a8fa0')}${V(252,418,13,'#d4960a')}
+    ${V(304,410,16,'#c8380a')}${V(348,418,13,'#e8a020')}
+    ${C(0,430,52,30,'#e8a020')}${C(56,434,52,30,'#c8380a')}${C(112,430,52,30,'#4a8fa0')}
+    ${C(168,434,52,30,'#e8a020')}${C(224,430,52,30,'#c8380a')}${C(280,434,52,30,'#4a8fa0')}${C(308,430,52,30,'#e8a020')}
+    ${N(53,462,13,'#4a8fa0')}${N(160,456,12,'#e8a020')}${N(270,462,13,'#c8380a')}
+    ${D(25,130,20,'#c8380a','#e8a020','#f5c842')}${D(25,200,18,'#4a8fa0','#f5c842','#c8380a')}
+    ${D(25,270,20,'#e8a020','#c8380a','#f5c842')}${D(25,340,18,'#c8380a','#4a8fa0','#f5c842')}
+    ${D(335,130,20,'#4a8fa0','#c8380a','#f5c842')}${D(335,200,18,'#c8380a','#f5c842','#4a8fa0')}
+    ${D(335,270,20,'#e8a020','#f5c842','#c8380a')}${D(335,340,18,'#d4960a','#c8380a','#f5c842')}
+    ${N(14,165,14,'#c8380a')}${N(14,230,14,'#e8a020')}${N(14,295,14,'#4a8fa0')}${N(14,360,14,'#c8380a')}
+    ${N(340,165,14,'#4a8fa0')}${N(340,230,14,'#c8380a')}${N(340,295,14,'#e8a020')}${N(340,360,14,'#4a8fa0')}
+    ${TB('#c8380a','#f5c842')}${BB('#2d1a4a','#f5c842')}`
+};
+
+function sf(name,btn){
+  frameContent.innerHTML = frames[name]();
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  if(btn) btn.classList.add('on');
+}
+sf('flores', document.querySelector('.tab.on'));
+
+function go(){
+  if(taken) return;
+  let c=3;
+  cdw.style.display='block'; cdw.textContent=c;
+  const iv=setInterval(()=>{
+    c--;
+    if(c>0){ cdw.textContent=c; }
+    else{ clearInterval(iv); cdw.textContent='📸'; setTimeout(()=>{ cdw.style.display='none'; snap(); },300); }
+  },1000);
+}
+
+function snap(){
+  const wrap=document.getElementById('cam');
+  const w=wrap.offsetWidth, h=wrap.offsetHeight;
+  cv.width=w; cv.height=h;
+  const ctx=cv.getContext('2d');
+  ctx.save();
+  if(fm==='user'){ ctx.translate(w,0); ctx.scale(-1,1); }
+  ctx.drawImage(vid,0,0,w,h);
+  ctx.restore();
+  const fullSvg=document.getElementById('svg');
+  const sd=new XMLSerializer().serializeToString(fullSvg);
+  const blob=new Blob([sd],{type:'image/svg+xml;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const img=new Image();
+  img.onload=()=>{
+    ctx.drawImage(img,0,0,w,h);
+    URL.revokeObjectURL(url);
+    pimg.src=cv.toDataURL('image/jpeg',.92);
+    prev.style.display='block'; taken=true;
+    rb.classList.remove('hide'); sb.classList.remove('hide');
+    hint.textContent='¡Órale! Guarda o repite 📸';
+    fl.style.opacity='1'; setTimeout(()=>{ fl.style.opacity='0'; },120);
+  };
+  img.src=url;
+}
+
+function retake(){
+  prev.style.display='none'; taken=false;
+  rb.classList.add('hide'); sb.classList.add('hide');
+  hint.textContent='Elige un marco y toca 📸';
+}
+function savePh(){
+  const a=document.createElement('a');
+  a.download='peps60.jpg';
+  a.href=cv.toDataURL('image/jpeg',.92);
+  a.click();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /Users/caroaguilar/CODE/cumple-peps add index.html)",
+      "Bash(git -C /Users/caroaguilar/CODE/cumple-peps commit -m ' *)",
+      "Bash(git -C /Users/caroaguilar/CODE/cumple-peps add \"Here Comes The Sun.mp3\" index.html)",
+      "Bash(git check-ignore *)"
+    ]
+  }
+}
