@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Trivia del Peps · ¡60 años!</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Righteous&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;background:#1a0a2e;font-family:'Righteous',sans-serif;min-height:100vh;}
+body{display:flex;flex-direction:column;align-items:center;}
+
+.hdr{width:100%;background:#c8380a;padding:12px 16px 9px;text-align:center;}
+.hdr-t{font-family:'Pacifico',cursive;color:#f5c842;font-size:22px;text-shadow:2px 2px 0 #8b1500;}
+.hdr-s{font-size:10px;color:#f0e8d8;letter-spacing:3px;text-transform:uppercase;}
+.strip{width:100%;height:7px;display:flex;}
+.s1{background:#c8380a;flex:1}.s2{background:#e8a020;flex:1}.s3{background:#4a8fa0;flex:1}.s4{background:#d4960a;flex:1}.s5{background:#6b3a1f;flex:1}
+
+.wrap{width:100%;max-width:460px;padding:18px 16px 30px;flex:1;}
+
+/* Pantallas */
+.screen{display:none;}
+.screen.on{display:block;}
+
+/* Inicio */
+.intro-card{background:#2d1a4a;border-radius:18px;padding:24px 20px;text-align:center;}
+.intro-emoji{font-size:50px;margin-bottom:8px;}
+.intro-title{font-family:'Pacifico',cursive;color:#f5c842;font-size:26px;margin-bottom:8px;}
+.intro-desc{color:#d4c0f0;font-size:13px;line-height:1.6;margin-bottom:18px;}
+input[type=text]{width:100%;padding:13px 16px;border-radius:12px;border:2px solid #4a8fa0;background:#1a0a2e;color:#f5c842;font-family:'Righteous',sans-serif;font-size:15px;text-align:center;letter-spacing:1px;outline:none;margin-bottom:14px;}
+input[type=text]::placeholder{color:#7a6a9a;}
+.big-btn{width:100%;padding:14px;border-radius:14px;border:none;background:#c8380a;color:#fff;font-family:'Righteous',sans-serif;font-size:16px;letter-spacing:2px;cursor:pointer;transition:transform .1s;}
+.big-btn:active{transform:scale(.97);}
+.big-btn.alt{background:#4a8fa0;margin-top:10px;}
+
+/* Pregunta */
+.progress-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.q-count{color:#f5c842;font-size:13px;letter-spacing:2px;}
+.q-score{color:#b8a0e0;font-size:13px;}
+.pbar{height:8px;background:#2d1a4a;border-radius:4px;overflow:hidden;margin-bottom:18px;}
+.pbar-fill{height:100%;background:linear-gradient(90deg,#c8380a,#e8a020,#f5c842);border-radius:4px;transition:width .4s;}
+.q-card{background:#2d1a4a;border-radius:18px;padding:22px 18px;margin-bottom:14px;}
+.q-text{color:#fff;font-size:17px;line-height:1.5;text-align:center;}
+.opts{display:flex;flex-direction:column;gap:10px;}
+.opt{background:#1a0a2e;border:2px solid #4a8fa0;border-radius:14px;padding:14px 16px;color:#f0e8d8;font-family:'Righteous',sans-serif;font-size:14px;cursor:pointer;text-align:left;transition:all .15s;display:flex;align-items:center;gap:10px;}
+.opt .letter{background:#4a8fa0;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.opt:active{transform:scale(.98);}
+.opt.correct{background:#1d4a1a;border-color:#5dba58;}
+.opt.correct .letter{background:#5dba58;}
+.opt.wrong{background:#4a1a1a;border-color:#c84a4a;}
+.opt.wrong .letter{background:#c84a4a;}
+.opt.disabled{pointer-events:none;opacity:.75;}
+.feedback{text-align:center;font-size:15px;margin-top:12px;min-height:24px;color:#f5c842;font-family:'Pacifico',cursive;}
+
+/* Final */
+.final-card{background:#2d1a4a;border-radius:18px;padding:26px 20px;text-align:center;}
+.final-emoji{font-size:56px;margin-bottom:6px;}
+.final-score{font-family:'Pacifico',cursive;color:#f5c842;font-size:44px;line-height:1;}
+.final-label{color:#d4c0f0;font-size:13px;letter-spacing:2px;margin-bottom:6px;}
+.final-msg{color:#fff;font-size:15px;margin:12px 0 18px;line-height:1.5;}
+
+/* Ranking */
+.rank-title{font-family:'Pacifico',cursive;color:#f5c842;font-size:24px;text-align:center;margin-bottom:14px;}
+.rank-list{display:flex;flex-direction:column;gap:8px;}
+.rank-item{background:#2d1a4a;border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:12px;}
+.rank-pos{font-family:'Pacifico',cursive;font-size:20px;color:#f5c842;width:34px;flex-shrink:0;text-align:center;}
+.rank-item:nth-child(1) .rank-pos{font-size:26px;}
+.rank-item:nth-child(1){border:2px solid #f5c842;}
+.rank-item:nth-child(2){border:2px solid #c0c0c0;}
+.rank-item:nth-child(3){border:2px solid #cd7f32;}
+.rank-name{flex:1;color:#fff;font-size:15px;}
+.rank-score{color:#f5c842;font-size:16px;}
+.rank-empty{text-align:center;color:#7a6a9a;padding:30px 0;font-size:14px;}
+.refresh-note{text-align:center;color:#7a6a9a;font-size:11px;margin-top:14px;letter-spacing:1px;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-t">Trivia del Peps 🎉</div>
+  <div class="hdr-s">¿Qué tanto conoces al mero mero?</div>
+</div>
+<div class="strip"><div class="s1"></div><div class="s2"></div><div class="s3"></div><div class="s4"></div><div class="s5"></div></div>
+
+<div class="wrap">
+
+  <!-- PANTALLA INICIO -->
+  <div class="screen on" id="scrIntro">
+    <div class="intro-card">
+      <div class="intro-emoji">🕺</div>
+      <div class="intro-title">¡El Peps cumple 60!</div>
+      <div class="intro-desc">17 preguntas sobre el festejado.<br>Escribe tu nombre y demuestra qué tanto lo conoces.</div>
+      <input type="text" id="playerName" placeholder="Tu nombre" maxlength="25"/>
+      <button class="big-btn" onclick="startGame()">¡EMPEZAR! ✌️</button>
+      <button class="big-btn alt" onclick="showRanking()">Ver ranking 🏆</button>
+    </div>
+  </div>
+
+  <!-- PANTALLA PREGUNTA -->
+  <div class="screen" id="scrQuiz">
+    <div class="progress-row">
+      <span class="q-count" id="qCount">1 / 17</span>
+      <span class="q-score" id="qScore">Puntos: 0</span>
+    </div>
+    <div class="pbar"><div class="pbar-fill" id="pbarFill" style="width:6%"></div></div>
+    <div class="q-card"><div class="q-text" id="qText"></div></div>
+    <div class="opts" id="opts"></div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <!-- PANTALLA FINAL -->
+  <div class="screen" id="scrFinal">
+    <div class="final-card">
+      <div class="final-emoji" id="finalEmoji">🏆</div>
+      <div class="final-label">TU PUNTAJE</div>
+      <div class="final-score" id="finalScore">0/17</div>
+      <div class="final-msg" id="finalMsg"></div>
+      <button class="big-btn" onclick="showRanking()">Ver ranking 🏆</button>
+      <button class="big-btn alt" onclick="location.reload()">Jugar de nuevo</button>
+    </div>
+  </div>
+
+  <!-- PANTALLA RANKING -->
+  <div class="screen" id="scrRank">
+    <div class="rank-title">🏆 Ranking</div>
+    <div class="rank-list" id="rankList">
+      <div class="rank-empty">Cargando...</div>
+    </div>
+    <div class="refresh-note">Se actualiza en tiempo real ✨</div>
+    <button class="big-btn alt" style="margin-top:16px;" onclick="goIntro()">← Volver al inicio</button>
+  </div>
+
+</div>
+
+<div class="strip"><div class="s5"></div><div class="s4"></div><div class="s3"></div><div class="s2"></div><div class="s1"></div></div>
+
+<!-- Firebase compat SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+<script>
+// ── FIREBASE ─────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyBCULC6HfuIDblg-aMyy5nQz8jkSeFVIQ0",
+  authDomain: "trivia-peps.firebaseapp.com",
+  databaseURL: "https://trivia-peps-default-rtdb.firebaseio.com",
+  projectId: "trivia-peps",
+  storageBucket: "trivia-peps.firebasestorage.app",
+  messagingSenderId: "138586109910",
+  appId: "1:138586109910:web:1382b5d242354e1f1dd677"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// ── PREGUNTAS ────────────────────────────────────────────────
+const QUESTIONS = [
+  {q:"¿Con qué se come el Peps los frijoles?", opts:["Mayonesa","Queso amarillo","Catsup"], correct:2},
+  {q:"¿Qué coche le gusta más?", opts:["Golf","Vocho","Tsuru"], correct:1},
+  {q:"¿Cómo tiene guardada a Regina en el celular?", opts:["Hija menor","Regina hija","Regina Septiembre"], correct:2},
+  {q:"¿Cuál es el calzado favorito del Peps?", opts:["Tenis","Botas","Zapato de tacón rojo"], correct:0},
+  {q:"El Peps es muy deportivo, se sabe. ¿En qué cancha prefiere demostrar sus habilidades?", opts:["Cancha de tenis","Cancha de futbol","Cancha de volleyball"], correct:0},
+  {q:"Cuando necesita pilas, ¿qué le pone el Peps a su café?", opts:["Azúcar","Chocolate","Más café"], correct:2},
+  {q:"Si le toca ir de pasajero, ¿dónde prefiere sentarse?", opts:["En las piernas del copiloto","En una ventana atrás","Atrás en el centro"], correct:2},
+  {q:"Actualmente, ¿cuál es su gusto dulce favorito? Además de mi mamá...", opts:["Gelatina de mango","Niño envuelto","Pan con mantequilla y sal"], correct:1},
+  {q:"Si este moreliano pudiera agregarle una fruta al gaspacho, ¿cuál sería?", opts:["Uvas","Mandarina","Melón"], correct:1},
+  {q:"En sus mañanas en el café de jubilados, ¿qué tipo de libro le gusta leer?", opts:["Novela","Teoría","Prefiere los comics"], correct:0},
+  {q:"Si tuviera que meter un gol con todas sus fuerzas, ¿qué pierna usaría?", opts:["Izquierda","Derecha"], correct:0},
+  {q:"Si en un viaje lo perdemos, ¿a dónde iríamos primero a buscarlo?", opts:["Biblioteca","Museo","Restaurante"], correct:0},
+  {q:"No le gusta ser básico. ¿Qué instrumento prefiere para pintar?", opts:["Los dedos","Espátula","Esponja"], correct:1},
+  {q:"¿A dónde se quiere ir a vivir cuando se jubile?", opts:["En medio del bosque","Playa","Una ciudad grande y moderna"], correct:1},
+  {q:"El medio de transporte que añora es...", opts:["Moto","Patín del diablo","4x4 para andar por la ciudad"], correct:0},
+  {q:"¿Cuál es su personaje de comic favorito?", opts:["Gatúbela","Mafalda","Batman"], correct:1},
+  {q:"¿Cuál es su hija favorita?", opts:["Regina","Carolina","Nala"], correct:2}
+];
+
+const LETTERS = ['A','B','C'];
+let playerName='', currentQ=0, score=0, answered=false, rankingRef=null;
+
+// ── NAVEGACIÓN ───────────────────────────────────────────────
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+function goIntro(){ if(rankingRef) rankingRef.off(); show('scrIntro'); }
+
+// ── JUEGO ────────────────────────────────────────────────────
+function startGame(){
+  const name = document.getElementById('playerName').value.trim();
+  if(!name){ 
+    document.getElementById('playerName').style.borderColor='#c8380a';
+    document.getElementById('playerName').placeholder='¡Escribe tu nombre primero!';
+    return;
+  }
+  playerName = name;
+  currentQ = 0; score = 0;
+  show('scrQuiz');
+  renderQ();
+}
+
+function renderQ(){
+  answered = false;
+  const Q = QUESTIONS[currentQ];
+  document.getElementById('qCount').textContent = (currentQ+1) + ' / ' + QUESTIONS.length;
+  document.getElementById('qScore').textContent = 'Puntos: ' + score;
+  document.getElementById('pbarFill').style.width = ((currentQ+1)/QUESTIONS.length*100) + '%';
+  document.getElementById('qText').textContent = Q.q;
+  document.getElementById('feedback').textContent = '';
+  const optsEl = document.getElementById('opts');
+  optsEl.innerHTML = '';
+  Q.opts.forEach((opt, i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = '<span class="letter">'+LETTERS[i]+'</span><span>'+opt+'</span>';
+    btn.onclick = ()=>answer(i, btn);
+    optsEl.appendChild(btn);
+  });
+}
+
+function answer(idx, btn){
+  if(answered) return;
+  answered = true;
+  const Q = QUESTIONS[currentQ];
+  const allOpts = document.querySelectorAll('.opt');
+  allOpts.forEach(o=>o.classList.add('disabled'));
+  
+  if(idx === Q.correct){
+    btn.classList.remove('disabled');
+    btn.classList.add('correct');
+    score++;
+    document.getElementById('feedback').textContent = '¡Órale, sí lo conoces! ✌️';
+  } else {
+    btn.classList.remove('disabled');
+    btn.classList.add('wrong');
+    allOpts[Q.correct].classList.remove('disabled');
+    allOpts[Q.correct].classList.add('correct');
+    document.getElementById('feedback').textContent = 'Uy no... esa no era 😅';
+  }
+  document.getElementById('qScore').textContent = 'Puntos: ' + score;
+  
+  setTimeout(()=>{
+    currentQ++;
+    if(currentQ < QUESTIONS.length){ renderQ(); }
+    else { finishGame(); }
+  }, 1600);
+}
+
+function finishGame(){
+  show('scrFinal');
+  document.getElementById('finalScore').textContent = score + '/' + QUESTIONS.length;
+  let emoji='🏆', msg='';
+  const pct = score/QUESTIONS.length;
+  if(pct === 1){ emoji='👑'; msg='¡PERFECTO! Eres oficialmente la persona que más conoce al Peps. ¿Seguro que no eres su mamá?'; }
+  else if(pct >= .8){ emoji='🏆'; msg='¡Casi perfecto! El Peps estaría orgulloso de ti.'; }
+  else if(pct >= .6){ emoji='🕺'; msg='Nada mal... pero te falta convivir más con el festejado.'; }
+  else if(pct >= .4){ emoji='😅'; msg='Hmm... ¿seguro que conoces al Peps o solo viniste por los tacos?'; }
+  else { emoji='🌮'; msg='Confirmado: viniste por los tacos. ¡Pero igual te queremos!'; }
+  document.getElementById('finalEmoji').textContent = emoji;
+  document.getElementById('finalMsg').textContent = msg;
+  
+  // Guardar en Firebase
+  db.ref('scores').push({
+    name: playerName,
+    score: score,
+    total: QUESTIONS.length,
+    ts: Date.now()
+  });
+}
+
+// ── RANKING ──────────────────────────────────────────────────
+function showRanking(){
+  show('scrRank');
+  rankingRef = db.ref('scores');
+  rankingRef.on('value', snap=>{
+    const data = snap.val();
+    const list = document.getElementById('rankList');
+    if(!data){
+      list.innerHTML = '<div class="rank-empty">Aún no hay jugadores.<br>¡Sé el primero! 🕺</div>';
+      return;
+    }
+    const arr = Object.values(data).sort((a,b)=> b.score - a.score || a.ts - b.ts);
+    list.innerHTML = arr.map((p,i)=>{
+      const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1);
+      return '<div class="rank-item"><div class="rank-pos">'+medal+'</div><div class="rank-name">'+escapeHtml(p.name)+'</div><div class="rank-score">'+p.score+'/'+p.total+'</div></div>';
+    }).join('');
+  });
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+</script>
+</body>
+</html>
