@@ -53,6 +53,7 @@ canvas{display:none;}
   .cam{width:min(100%,420px,max(110px,calc(100dvh - 161px)));}
 }
 </style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -114,6 +115,11 @@ const rb       = document.getElementById('rb');
 const sb       = document.getElementById('sb');
 const hint     = document.getElementById('hint');
 let fm='user', taken=false, stream=null, currentIdx=0, lastDataUrl=null;
+
+// === Configuración de Google Drive (ver docs/superpowers/specs/2026-06-13-photobooth-cloud-features-design.md) ===
+const GOOGLE_CLIENT_ID = '__REEMPLAZAR_CON_CLIENT_ID__';
+const DRIVE_FOLDER_ID  = '__REEMPLAZAR_CON_FOLDER_ID__';
+let accessToken = null, tokenClient = null;
 
 // Mostrar primer marco
 overlay.src = MARCOS[0];
