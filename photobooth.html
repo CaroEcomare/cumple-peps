@@ -205,6 +205,8 @@ function snap() {
     taken=true;
     rb.classList.remove('hide');
     sb.classList.remove('hide');
+    ub.classList.remove('hide');
+    setUploadState('idle');
     hint.textContent='¡Órale! Guarda o repite 📸';
     fl.style.opacity='1';
     setTimeout(()=>{ fl.style.opacity='0'; }, 120);
@@ -220,7 +222,7 @@ function snap() {
 
 function retake() {
   prev.style.display='none'; taken=false; lastDataUrl=null;
-  rb.classList.add('hide'); sb.classList.add('hide');
+  rb.classList.add('hide'); sb.classList.add('hide'); ub.classList.add('hide');
   hint.textContent='Elige un marco y toca 📸';
 }
 
