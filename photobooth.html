@@ -133,17 +133,12 @@ async function startCam() {
   vid.classList.toggle('mirror', fm==='user');
   try {
     stream = await navigator.mediaDevices.getUserMedia({
-      video:{facingMode:fm, width:{ideal:1280}, height:{ideal:1920}},
+      video:{facingMode:fm, width:{ideal:1280}, height:{ideal:1920}, aspectRatio:{ideal:2/3}},
       audio:false
     });
     vid.srcObject = stream;
-    vid.onloadedmetadata = () => {
-      const wrap = document.getElementById('cam');
-      const track = stream.getVideoTracks()[0];
-      const s = track.getSettings ? track.getSettings() : {};
-      const c = track.getCapabilities ? track.getCapabilities() : {};
-      hint.textContent = `DEBUG cam=${vid.videoWidth}x${vid.videoHeight} box=${wrap.offsetWidth}x${wrap.offsetHeight} zoom=${s.zoom} zoomCap=${JSON.stringify(c.zoom||{})}`;
-    };
+    hint.textContent = taken ? '¡Órale! Guarda o repite 📸' : 'Elige un marco y toca 📸';
+    hint.style.color = '';
   } catch(e) {
     hint.textContent = 'Permite el acceso a la cámara ☝️';
     hint.style.color = '#e8a020';
