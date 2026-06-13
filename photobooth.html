@@ -125,6 +125,13 @@ async function startCam() {
       audio:false
     });
     vid.srcObject = stream;
+    vid.onloadedmetadata = () => {
+      const wrap = document.getElementById('cam');
+      const track = stream.getVideoTracks()[0];
+      const s = track.getSettings ? track.getSettings() : {};
+      const c = track.getCapabilities ? track.getCapabilities() : {};
+      hint.textContent = `DEBUG cam=${vid.videoWidth}x${vid.videoHeight} box=${wrap.offsetWidth}x${wrap.offsetHeight} zoom=${s.zoom} zoomCap=${JSON.stringify(c.zoom||{})}`;
+    };
   } catch(e) {
     hint.textContent = 'Permite el acceso a la cámara ☝️';
     hint.style.color = '#e8a020';
