@@ -19,7 +19,8 @@ body{display:flex;flex-direction:column;align-items:center;min-height:100vh;}
 .tab.on{background:#c8380a;border-color:#f5c842;color:#fff;}
 .cam{position:relative;width:min(100%,420px,max(140px,calc((100vh - 240px) * 2/3)));aspect-ratio:2/3;background:#111;overflow:hidden;}
 .cam{width:min(100%,420px,max(140px,calc((100dvh - 240px) * 2/3)));}
-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);}
+video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+video.mirror{transform:scaleX(-1);}
 .frame-overlay{position:absolute;inset:0;width:100%;height:100%;z-index:10;pointer-events:none;object-fit:fill;}
 .prev{position:absolute;inset:0;z-index:20;display:none;}
 .prev img{width:100%;height:100%;object-fit:cover;}
@@ -119,6 +120,7 @@ overlay.src = MARCOS[0];
 
 async function startCam() {
   if(stream) stream.getTracks().forEach(t=>t.stop());
+  vid.classList.toggle('mirror', fm==='user');
   try {
     stream = await navigator.mediaDevices.getUserMedia({
       video:{facingMode:fm, width:{ideal:1280}, height:{ideal:1920}},
