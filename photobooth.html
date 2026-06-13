@@ -252,6 +252,92 @@ async function savePh() {
   a.href=lastDataUrl;
   a.click();
 }
+
+function buildUploadBody(base64Data, metadata, boundary) {
+  return (
+    `--${boundary}\r\n` +
+    `Content-Type: application/json\r\n\r\n` +
+    JSON.stringify(metadata) + `\r\n` +
+    `--${boundary}\r\n` +
+    `Content-Type: ${metadata.mimeType}\r\n` +
+    `Content-Transfer-Encoding: base64\r\n\r\n` +
+    base64Data + `\r\n` +
+    `--${boundary}--`
+  );
+}
+
+function setUploadState(state) {
+  ub.classList.remove('er');
+  if(state === 'idle') {
+    ub.disabled=false; ub.textContent='☁️ Subir';
+  } else if(state === 'uploading') {
+    ub.disabled=true; ub.textContent='Subiendo…';
+  } else if(state === 'success') {
+    ub.disabled=false; ub.textContent='✓ Subido';
+    setTimeout(()=>{ if(taken) setUploadState('idle'); }, 3000);
+  } else if(state === 'error') {
+    ub.disabled=false; ub.textContent='⚠️ Reintentar';
+    ub.classList.add('er');
+  }
+}
+
+function getTokenClient() {
+  if(!tokenClient) {
+    tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: GOOGLE_CLIENT_ID,
+      scope: 'https://www.googleapis.com/auth/drive.file',
+      callback: (resp) => {
+        if(resp.error) { setUploadState('error'); return; }
+        accessToken = resp.access_token;
+        doUpload();
+      },
+    });
+  }
+  return tokenClient;
+}
+
+function uploadToDrive() {
+  if(!lastDataUrl) return;
+  if(!accessToken) {
+    getTokenClient().requestAccessToken();
+    return;
+  }
+  doUpload();
+}
+
+async function doUpload() {
+  setUploadState('uploading');
+  try {
+    const base64Data = lastDataUrl.split(',')[1];
+    const metadata = {
+      name: `peps60-foto-${Date.now()}.jpg`,
+      parents: [DRIVE_FOLDER_ID],
+      mimeType: 'image/jpeg',
+    };
+    const boundary = 'peps60_boundary';
+    const body = buildUploadBody(base64Data, metadata, boundary);
+
+    const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+      method:'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': `multipart/related; boundary=${boundary}`,
+      },
+      body,
+    });
+
+    if(res.status === 401) {
+      accessToken = null;
+      getTokenClient().requestAccessToken();
+      return;
+    }
+    if(!res.ok) throw new Error('upload failed: '+res.status);
+
+    setUploadState('success');
+  } catch(e) {
+    setUploadState('error');
+  }
+}
 </script>
 </body>
 </html>
