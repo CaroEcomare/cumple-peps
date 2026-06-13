@@ -214,8 +214,29 @@ function retake() {
   hint.textContent='Elige un marco y toca 📸';
 }
 
-function savePh() {
+function dataURLtoBlob(dataUrl) {
+  const [header, base64] = dataUrl.split(',');
+  const mime = header.match(/data:(.*?);base64/)[1];
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i=0; i<binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return new Blob([bytes], { type: mime });
+}
+
+async function savePh() {
   if(!lastDataUrl) return;
+  const blob = dataURLtoBlob(lastDataUrl);
+  const file = new File([blob], 'peps60-foto.jpg', { type: 'image/jpeg' });
+
+  if(navigator.canShare && navigator.canShare({ files:[file] })) {
+    try {
+      await navigator.share({ files:[file], title:'Foto Peps 60' });
+      return;
+    } catch(e) {
+      if(e.name === 'AbortError') return;
+    }
+  }
+
   const a=document.createElement('a');
   a.download='peps60-foto.jpg';
   a.href=lastDataUrl;
