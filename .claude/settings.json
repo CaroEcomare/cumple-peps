@@ -24,7 +24,20 @@
       "Bash(node measure.js)",
       "Bash(node measure2.js)",
       "Bash(node measure3.js)",
-      "Bash(node interact.js)"
+      "Bash(node interact.js)",
+      "Bash(git commit *)",
+      "Bash(node diag.js)",
+      "Bash(node check_svg.js)",
+      "Bash(node test_crop.js)",
+      "Bash(node verify_fix.js)",
+      "Bash(ls /Users/caroaguilar/Library/Caches/ms-playwright/ | grep -i ffmpeg)",
+      "Read(//Users/caroaguilar/Library/Caches/ms-playwright/**)",
+      "Bash(/Users/caroaguilar/Library/Caches/ms-playwright/ffmpeg-1011/ffmpeg-mac-arm64 -version)",
+      "Bash(/Users/caroaguilar/Library/Caches/ms-playwright/ffmpeg-1011/ffmpeg-mac -version)",
+      "Bash(python3 -c \"import PIL; print\\('PIL ok'\\)\")",
+      "Bash(python3 -c \"import numpy; print\\('numpy ok'\\)\")",
+      "Bash(python3 make_y4m.py)",
+      "Bash(node verify_circle.js)"
     ],
     "additionalDirectories": [
       "/tmp",

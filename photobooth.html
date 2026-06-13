@@ -164,10 +164,16 @@ function snap() {
   // 1. Limpiar
   ctx.clearRect(0,0,w,h);
 
-  // 2. Video (con espejo si es frontal)
+  // 2. Video (con espejo si es frontal) — recortar como object-fit:cover
+  // para que la foto respete la proporción de la cámara, igual que la vista previa
+  const vw=vid.videoWidth, vh=vid.videoHeight;
+  const destAR=w/h, srcAR=vw/vh;
+  let sx=0, sy=0, sw=vw, sh=vh;
+  if(srcAR > destAR) { sw = vh*destAR; sx = (vw-sw)/2; }
+  else { sh = vw/destAR; sy = (vh-sh)/2; }
   ctx.save();
   if(fm==='user') { ctx.translate(w,0); ctx.scale(-1,1); }
-  ctx.drawImage(vid, 0,0,w,h);
+  ctx.drawImage(vid, sx,sy,sw,sh, 0,0,w,h);
   ctx.restore();
 
   // 3. Marco — usar la imagen pre-cargada, sin cross-origin
